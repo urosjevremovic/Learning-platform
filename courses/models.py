@@ -1,5 +1,6 @@
+
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
@@ -18,7 +19,7 @@ class Subject(models.Model):
 
 
 class Course(models.Model):
-    owner = models.ForeignKey(User, related_name='created_courses', on_delete=models.CASCADE)
+    owner = models.ForeignKey(get_user_model(), related_name='created_courses', on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, related_name='courses', on_delete=models.CASCADE)
     title = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128, unique=True)
@@ -62,7 +63,7 @@ class Content(models.Model):
 
 
 class ItemBase(models.Model):
-    owner = models.ForeignKey(User, related_name='%(class)s', on_delete=models.CASCADE)
+    owner = models.ForeignKey(get_user_model(), related_name='%(class)s', on_delete=models.CASCADE)
     title = models.CharField(max_length=256)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
