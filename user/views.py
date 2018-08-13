@@ -1,6 +1,7 @@
 from django.contrib.auth import logout, authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
+from django.urls import reverse
 
 from user.forms import LoginForm
 
@@ -17,7 +18,7 @@ def login_user(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect('/')
+                    return HttpResponseRedirect(reverse('courses:course_list'))
                 else:
                     return HttpResponse('Disabled account')
             else:

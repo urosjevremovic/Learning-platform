@@ -1,26 +1,8 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from courses.models import Course
-
-
-class OwnerMixin:
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(owner=self.request.user)
-
-
-class OwnerEditMixin:
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid()
-
-
-class OwnerCourseMixin(OwnerMixin, LoginRequiredMixin):
-    model = Course
+from courses.mixins import OwnerCourseMixin, OwnerEditMixin
 
 
 class OwnerCourseEditMixin(OwnerCourseMixin, OwnerEditMixin):
@@ -29,7 +11,7 @@ class OwnerCourseEditMixin(OwnerCourseMixin, OwnerEditMixin):
     template_name = 'courses/manage/course/form.html'
 
 
-class ManageCourseListView(OwnerMixin, ListView):
+class ManageCourseListView(OwnerCourseMixin, ListView):
     template_name = 'courses/manage/course/list.html'
 
 
