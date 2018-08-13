@@ -2,13 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from courses.mixins import OwnerCourseMixin, OwnerEditMixin
-
-
-class OwnerCourseEditMixin(OwnerCourseMixin, OwnerEditMixin):
-    fields = ['subject', 'title', 'slug', 'overview']
-    success_url = reverse_lazy('manage_course_list')
-    template_name = 'courses/manage/course/form.html'
+from courses.mixins import OwnerCourseMixin, OwnerCourseEditMixin
 
 
 class ManageCourseListView(OwnerCourseMixin, ListView):
@@ -25,6 +19,6 @@ class CourseUpdateView(PermissionRequiredMixin, OwnerCourseEditMixin, UpdateView
 
 class CourseDeleteView(PermissionRequiredMixin, OwnerCourseMixin, DeleteView):
     template_name = 'courses/manage/course/delete.html'
-    success_url = reverse_lazy('manage_course_list')
+    success_url = reverse_lazy('courses:course_list')
     permission_required = 'courses.delete_course'
 
