@@ -8,6 +8,7 @@ django = "*"
 requests = "*"
 pillow = "*"
 django-autofixture = "*"
+django-crispy-forms = "*"
 
 [dev-packages]
 
