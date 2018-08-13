@@ -30,3 +30,16 @@
     float:left;
     width:600px;
 }
+
+.course-info {
+    border:1px solid #ccc;
+    padding:0 20px;
+    margin-bottom:10px;
+    width:400px;
+    overflow:auto;
+}
+
+.course-info a {
+    margin-right:10px;
+}
+
