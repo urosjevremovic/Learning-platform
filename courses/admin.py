@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Subject, Course, Module
+from courses.models import Subject, Course, Module
 
 
 @admin.register(Subject)
