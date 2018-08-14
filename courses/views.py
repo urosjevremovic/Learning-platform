@@ -1,3 +1,5 @@
+from django.apps import apps
+from django.forms import modelform_factory
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -6,7 +8,7 @@ from django.views.generic.base import View, TemplateResponseMixin
 
 from courses.forms import ModuleFormSet
 from courses.mixins import OwnerCourseMixin, OwnerCourseEditMixin
-from courses.models import Course
+from courses.models import Course, Module
 
 
 class ManageCourseListView(OwnerCourseMixin, ListView):
@@ -51,3 +53,29 @@ class CourseModuleUpdateView(TemplateResponseMixin, View):
             return redirect('courses:course_list')
         return self.render_to_response({'course': self.course, 'formset': formset})
 
+
+class ContentCreateUpdateView(TemplateResponseMixin, View):
+    module = None
+    model = None
+    obj = None
+    template_name = 'courses/manage/course/form.html'
+
+    def get_model(self, model_name):
+        if model_name in ['text', 'video', 'image', 'file']:
+            return apps.get_model(app_label='courses', model_name=model_name)
+        return None
+
+    def get_form(self, model, *args, **kwargs):
+        Form = modelform_factory(model, exclude=['owner',
+                                                 'order',
+                                                 'created',
+                                                 'updated'])
+        return Form(*args, **kwargs)
+
+    def dispatch(self, request, id=None, *args, **kwargs):
+        self.module = get_object_or_404(Module, id=kwargs['module_id'], course__owner=request.user)
+        self.model = self.get_model(kwargs['model_name'])
+        if id:
+            self.obj = get_object_or_404(self.model, id=id, owner=request.user)
+
+        return super().dispatch(id, *args, **kwargs)
