@@ -8,7 +8,7 @@ from django.views.generic.base import View, TemplateResponseMixin
 
 from courses.forms import ModuleFormSet
 from courses.mixins import OwnerCourseMixin, OwnerCourseEditMixin
-from courses.models import Course, Module
+from courses.models import Course, Module, Content
 
 
 class ManageCourseListView(OwnerCourseMixin, ListView):
@@ -79,3 +79,20 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
             self.obj = get_object_or_404(self.model, id=id, owner=request.user)
 
         return super().dispatch(id, *args, **kwargs)
+
+    def get(self):
+        form = self.get_form(self.model, instance=self.obj)
+        return self.render_to_response({'form': form, 'object': self.obj})
+
+    def post(self, request, id=None):
+        form = self.get_form(self.model, instance=self.obj, data=request.POST, files=request.FILES)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.owner = request.user
+            obj.save()
+            if not id:
+                Content.objects.create(module=self.module, item=obj)
+            return redirect('courses:module_content_list', self.module.id)
+
+        return self.render_to_response({'form': form, 'object': self.obj})
+
