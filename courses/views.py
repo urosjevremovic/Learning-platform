@@ -37,8 +37,6 @@ class CourseModuleUpdateView(TemplateResponseMixin, View):
         return ModuleFormSet(instance=self.course, data=data)
 
     def dispatch(self, request, *args, **kwargs):
-        print(args)
-        print(kwargs)
         self.course = get_object_or_404(Course, id=kwargs['pk'], owner=request.user)
         return super().dispatch(request, *args)
 
