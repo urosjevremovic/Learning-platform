@@ -9,6 +9,7 @@ requests = "*"
 pillow = "*"
 django-autofixture = "*"
 django-crispy-forms = "*"
+django-braces = "*"
 
 [dev-packages]
 

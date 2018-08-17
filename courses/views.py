@@ -10,6 +10,8 @@ from courses.forms import ModuleFormSet
 from courses.mixins import OwnerCourseMixin, OwnerCourseEditMixin
 from courses.models import Course, Module, Content
 
+from braces.views import CsrfExemptMixin, JsonRequestResponseMixin
+
 
 class ManageCourseListView(OwnerCourseMixin, ListView):
     template_name = 'courses/manage/course/list.html'
@@ -111,3 +113,11 @@ class ModuleContentListView(TemplateResponseMixin, View):
     def get(self, request, *args, **kwargs):
         module = get_object_or_404(Module, id=kwargs['module_id'], course__owner=request.user)
         return self.render_to_response({'module': module})
+
+
+class ModuleOrderView(CsrfExemptMixin, JsonRequestResponseMixin, View):
+
+    def post(self, request):
+        for id, order in self.request_json.items():
+            Module.objects.filter(id=id, course__owner=request.user).update(order=order)
+        return self.render_json_response({'saved': 'OK'})
