@@ -23,10 +23,27 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script>
     $(document).ready(function () {
         {% block domready %}
-        {% endblock %}
+            $('#modules').sortable({
+                stop: function(event, ui) {
+                    modules_order = {};
+                    $('#modules').children().each(function(){
+                        $(this).find('.order').text($(this).index() + 1);
+                        modules_order[$(this).data('id')] = $(this).index();
+                    });
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url "courses:module_order" %}',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                           data: JSON.stringify(modules_order)
+                       });
+                }
+            });
+{% endblock %}
     });
 </script>
 </body>
