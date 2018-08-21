@@ -1,9 +1,10 @@
 from django.contrib.auth import logout, authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView
 
-from user.forms import LoginForm
+from user.forms import LoginForm, UserRegistrationForm
 
 
 def login_user(request):
@@ -26,3 +27,16 @@ def login_user(request):
     else:
         form = LoginForm()
     return render(request, 'registration/login.html', {'form': form})
+
+
+class UserRegistrationView(CreateView):
+    template_name = 'users/user/registration.html'
+    form_class = UserRegistrationForm
+    success_url = reverse_lazy('users:user_course_list')
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        cd = form.cleaned_data
+        user = authenticate(username=cd['username'], password=cd['password'])
+        login(self.request, user)
+        return result
