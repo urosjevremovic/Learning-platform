@@ -19,7 +19,7 @@ urlpatterns = [
     path('module/<int:module_id>/', ModuleContentListView.as_view(), name='module_content_list'),
     path('module/order/', ModuleOrderView.as_view(), name='module_order'),
     path('content/order/', ContentOrderView.as_view(), name='content_order'),
-    path('subject/<slug:subject>)/', CourseListView.as_view(), name='course_list_subject'),
-
+    path('subject/<slug:subject>/', CourseListView.as_view(), name='course_list_subject'),
+    path('subject/', CourseListView.as_view(), name='course_list_subject'),
     path('<slug:slug>/', CourseDetailView.as_view(), name='course_detail'),
 ]
