@@ -1,5 +1,6 @@
 from django import forms
 
+from courses.models import Course
 from user.models import User
 
 
@@ -39,3 +40,7 @@ class UserRegistrationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class CourseEnrollForm(forms.Form):
+    course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.HiddenInput)
