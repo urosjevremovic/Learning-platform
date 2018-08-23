@@ -4,7 +4,7 @@ from django.forms import modelform_factory
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.views.generic.base import View, TemplateResponseMixin
 
 from courses.forms import ModuleFormSet
@@ -155,3 +155,12 @@ class CourseDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['enroll_form'] = CourseEnrollForm(initial={'course': self.object})
         return context
+
+
+class StudentCourseListVIew(LoginRequiredMixin, ListView):
+    model = Course
+    template_name = 'users/course/list.html'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(students__in=[self.request.user])
