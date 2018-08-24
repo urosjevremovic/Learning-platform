@@ -21,8 +21,8 @@ urlpatterns = [
     path('content/order/', ContentOrderView.as_view(), name='content_order'),
     path('subject/<slug:subject>/', CourseListView.as_view(), name='course_list_subject'),
     path('subject/', CourseListView.as_view(), name='course_list_subject'),
-    path('<slug:slug>/', CourseDetailView.as_view(), name='course_detail'),
     path('courses/', StudentCourseListView.as_view(), name='student_course_list'),
+    path('<slug:slug>/', CourseDetailView.as_view(), name='course_detail'),
     path('course/<pk>/', StudentCourseDetailView.as_view(), name='student_course_detail'),
     path('course/<pk>/<module_id>/', StudentCourseDetailView.as_view(), name='student_course_detail_module'),
 ]
